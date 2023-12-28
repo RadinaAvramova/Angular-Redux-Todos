@@ -1,0 +1,56 @@
+<div class='flex-container flex-column flex-center width-100'>
+    <h1 class='color-purple'>Todo's List</h1>
+    <div class='flex-container flex-center width-100'>
+        <div class='flex-container flex-column width-80'>
+            <div class='flex-container flex-space-between-row table-header table-row'>
+                <div class='flex-container flex-center width-20'>Name</div>
+                <div class='flex-container flex-center width-20'>Description</div>
+                <div class='flex-container flex-center width-20'>Completed</div>
+                <div class='flex-container flex-center width-20'>Created</div>
+                <div class='flex-container flex-center width-20'></div>
+            </div>
+            <div class='flex-container flex-space-between-row table-row-content'>
+                <div class='width-100' *ngIf='todo_state | async as todosData; else loading'>
+                    <div *ngIf='todosData.length; else noTodos'>
+                        <div *ngFor='let todo of todosData; let i = index ' class='flex-container flex-space-between-row table-row width-100 '>
+                            <div class='flex-container flex-center width-20'>{{todo.name}}</div>
+                            <div class='flex-container flex-center width-20'>{{todo.description}}</div>
+                            <div class='flex-container flex-center width-20'>
+                                <div class="md-checkbox">
+                                    <input name='complete' (click)='completeTodo(todo)' [attr.id]='i' type="checkbox" [attr.checked]="todo.complete ? '' : null">
+                                    <label [attr.for]='i'></label>
+                                </div>
+                            </div>
+                            <div class='flex-container flex-center width-20'>{{todo.created | date:medium}}</div>
+                            <div class='flex-container flex-center width-20'>
+                                <i (click)='deleteTodo(todo)' class="fa fa-trash-o" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template #noTodos>
+                        <div class='flex-container flex-center'>No Todos</div>
+                    </ng-template>
+                </div>
+                <ng-template #loading class='flex-container flex-center width-100'>
+                    <div class='flex-container flex-column flex-center width-100'>
+                        <div class='flex-container flex-center'>Loading</div>
+                        <i class='fa fa-gear fa-spin'></i>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class='flex-container margin-top-50'>
+        <form [formGroup]='todoForm' (ngSubmit)='addTodo()'>
+            <div class='form-group'>
+                <label for="name">Name</label>
+                <input id='name' name='name' type="text" formControlName='name' placeholder='Enter Name'>
+            </div>
+            <div class="form-group margin-top-15">
+                <label for="description">Description</label>
+                <input id='description' name='description' type="text" formControlName='description' placeholder='Enter Description'>
+            </div>
+            <button [disabled]='!todoForm.valid' type='submit' class='btn-primary width-100 margin-top-15'>Add</button>
+        </form>
+    </div>
+</div>
